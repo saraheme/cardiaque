@@ -72,7 +72,7 @@ def onglet_info():
         st.write(conf_matrix)
 
 def onglet_pred():
-        st.title("Entrez les informations suivantes sur un patient pour savoir s'il va contracter une crise cardiaque")
+        st.title("Entrez les informations suivantes sur un individu pour savoir s'il va contracter une crise cardiaque")
         st.write("Formulaire :")
         age = st.number_input("Age", step=1,key="age")
         cp = st.radio("Type de douleur thoracique",options=["Angine de poitrine typique","Angine de poitrine atypique","Douleur non-angineuse","Asymptomatique"],key="pain")
