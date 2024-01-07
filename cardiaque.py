@@ -20,7 +20,7 @@ def transfo_df(df):
         df['restecg'] = df['restecg'].replace({"Normal":1,"Onde ST anormale":2,"Hypertrophie ventriculaire":0})
         df['exng'] = df['exng'].replace({'Non': 0, 'Oui': 1})
         df['slp'] = df['slp'].replace({"Pente descendante":0, "Plat":1, "Pente ascendante":2})
-        df['thall'] = df['thall'].replace({"Anomalie majeure":1,"Absence":2,"Anomalie mineure":3})
+        df['thall'] = df['thall'].replace({"Anomalie majeure":2,"Absence":0,"Anomalie mineure":3,"Anomalie intermédiaire":1})
         return df
 
 def one_hot_encoder(dataframe, categorical_col, drop_first=True):
@@ -40,8 +40,8 @@ def encode_norme(df):
 def onglet_info():
         st.title('Prédiction "Contracter une crise cardiaque"' + " qui a pour but de réaliser la tarification d'un produit d'assurance")
         st.subheader("Zeynep KAYA et Sarah BOUSTEILA")
-        st.markdown("Le but de cette API est d'entrer des informations sur un assuré afin de prédire s'il a de fortes chances de contracter une crise cardiaque.\n"
-                "Plus précisément, l'algorithme permet d'evaluer la probabilité du rétrécissement du diamètre de l'artère coronaire qui irrigue le coeur (si elle est >= 50% on considère que l'assuré à de fortes chances d'avoir une maladie cardiovasculaire et donc susceptible de contracter une crise cardiaque)\n"
+        st.markdown("Le but de cette Webapp est d'entrer des informations sur un assuré afin de prédire s'il a de fortes chances de contracter une crise cardiaque.\n"
+                "Plus précisément, l'algorithme permet d'evaluer la probabilité du rétrécissement du diamètre de l'artère coronaire qui irrigue le coeur (si elle est >= 50% on considère que l'assuré à de fortes chances d'avoir une maladie cardiovasculaire et donc susceptible de contracter une crise cardiaque).\n"
                 "Les données utilisées sont celles de *heart.csv* consultables sur https://www.kaggle.com/datasets/rashikrahmanpritom/heart-attack-analysis-prediction-dataset/data.")
         st.markdown("Concernant le choix du modèle nous avons choisi d'utiliser une régression logistique avec les quelques résultats de performances suivants : ")
         cv_results = cross_validate(model, X, y, cv=10, scoring=['accuracy', 'f1', 'roc_auc', 'precision', 'recall'])
@@ -72,7 +72,7 @@ def onglet_info():
         st.write(conf_matrix)
 
 def onglet_pred():
-        st.title("Entrez les informations suivantes sur un individu pour savoir s'il va contracter une crise cardiaque")
+        st.title("Entrez les informations suivantes sur un assuré pour savoir s'il est fortement susceptible de contracter une crise cardiaque")
         st.write("Formulaire :")
         age = st.number_input("Age", step=1,key="age")
         cp = st.radio("Type de douleur thoracique",options=["Angine de poitrine typique","Angine de poitrine atypique","Douleur non-angineuse","Asymptomatique"],key="pain")
@@ -84,8 +84,8 @@ def onglet_pred():
         exang = st.radio("Angine de poitrine provoquée par l'exercice ?",options=["Oui","Non"],key="exang")
         oldpeak = st.number_input("Dépression du segment ST induite par l'exercice par rapport au repos",key="oldpeak")
         slp = st.radio("Pente du segment ST du pic d'exercice",options=["Pente descendante","Plat","Pente ascendante"],key="slp")
-        caa = st.radio("Nombre de vaisseaux principaux colorés par flourosopie",options =[0,1,2,3,4])
-        thall = st.radio("Thalassémie",options=["Anomalie majeure","Absence","Anomalie mineure"])
+        caa = st.radio("Nombre de vaisseaux principaux colorés par fluorosopie",options =[0,1,2,3,4])
+        thall = st.radio("Thalassémie",options=["Absence","Anomalie mineure","Anomalie intermédiaire","Anomalie majeure"])
 
         #Création du dataframe qui contient les données renseignées
         data = [{
@@ -108,7 +108,7 @@ def onglet_pred():
                                 st.image("images/coeur-en-bonne-sante.png")
                 else:
                         with col1:
-                                st.write("Attention ! Selon le modèle l'assuré fera une criste cardiaque !")
+                                st.write("Attention ! Selon le modèle l'assuré fera une crise cardiaque !")
                         with col2:
                                 st.image("images/coeur-mauvaise-santé.jpg")
 
